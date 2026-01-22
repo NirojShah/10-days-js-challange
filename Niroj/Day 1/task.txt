@@ -1,0 +1,148 @@
+What is closure ?
+
+-- Closure is a function which remembers the variable of the outer function even after execution if it is used in the inner function.
+
+eg - 
+
+function w(){
+    const x = 10;
+    function y(){
+        console.log(x);
+    }
+    y()
+}
+
+w()
+
+you will get the output - 10
+
+because of closure it is remembering the value of x even after the execution of w because it is used in function y
+
+
+
+
+
+2️⃣ Output-based Closure Questions (with answers)
+Q1
+function test() {
+    let x = 10;
+    return function () {
+        console.log(x);
+    };
+}
+
+const fn = test();
+fn();
+
+
+✅ Output
+
+10
+
+
+✔ fn remembers x
+
+Q2 (Classic)
+for (var i = 1; i <= 3; i++) {
+    setTimeout(() => {
+        console.log(i);
+    }, 1000);
+}
+
+
+✅ Output
+
+4
+4
+4
+
+
+✔ One shared i
+✔ Closures capture reference
+✔ Loop finishes before timeout runs
+
+Q3
+for (let i = 1; i <= 3; i++) {
+    setTimeout(() => {
+        console.log(i);
+    }, 1000);
+}
+
+
+✅ Output
+
+1
+2
+3
+
+
+✔ New i for each iteration
+✔ Separate closures
+
+Q4
+function outer() {
+    let a = 5;
+
+    return function inner(b) {
+        console.log(a + b);
+    };
+}
+
+outer()(10);
+
+
+✅ Output
+
+15
+
+Q5 (Tricky)
+function createFns() {
+    let arr = [];
+
+    for (var i = 0; i < 3; i++) {
+        arr.push(function () {
+            console.log(i);
+        });
+    }
+
+    return arr;
+}
+
+const fns = createFns();
+fns[0]();
+
+
+✅ Output
+
+3
+
+
+✔ All functions share same i
+
+3️⃣ bind() Polyfill (VERY IMPORTANT 🔥)
+What bind does
+
+Returns a new function
+
+Permanently binds this
+
+Supports arguments
+
+Simple bind polyfill (INTERVIEW-LEVEL)
+Function.prototype.myBind = function (context, ...args) {
+    const originalFn = this;
+
+    return function (...newArgs) {
+        return originalFn.apply(context, [...args, ...newArgs]);
+    };
+};
+
+Usage
+function greet(city) {
+    console.log(this.name, city);
+}
+
+const user = { name: "Niroj" };
+
+const boundFn = greet.myBind(user);
+boundFn("Delhi"); // Niroj Delhi
