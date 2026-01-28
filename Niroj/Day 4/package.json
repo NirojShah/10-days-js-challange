@@ -1,13 +1,14 @@
 {
-  "name": "10-days-js-challange",
+  "name": "day-4",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "main": "1. Node.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
+  "description": "",
   "dependencies": {
     "cors": "^2.8.6",
     "express": "^5.2.1"
