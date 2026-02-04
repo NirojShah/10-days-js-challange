@@ -173,3 +173,18 @@ const triple= mul(3)
 console.log(double(2)(4))
 console.log(triple(3)(10))
 
+
+const fs = require("fs")
+
+const stream = fs.createReadStream("./1.4 prax.js")
+
+stream.on("data",(chunk)=>{
+console.log(chunk)
+})
+
+stream.on("error",(err)=>{
+  console.log(err)
+})
+
+console.log("thutttt")
+
