@@ -176,10 +176,10 @@ console.log(triple(3)(10))
 
 const fs = require("fs")
 
-const stream = fs.createReadStream("./1.4 prax.js")
+const stream = fs.createReadStream("./1. prax.js")
 
 stream.on("data",(chunk)=>{
-console.log(chunk)
+console.log(String(chunk))
 })
 
 stream.on("error",(err)=>{
