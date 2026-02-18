@@ -1,0 +1,273 @@
+✅ 1. Design User & Order Schema (Mongoose)
+
+In real applications:
+
+A User can have many Orders
+
+An Order belongs to one User
+
+That is a One-to-Many relationship
+
+So we use:
+
+User collection
+
+Order collection
+
+Reference using ObjectId
+
+✅ User Schema
+const mongoose = require("mongoose");
+
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true
+    },
+
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true
+    },
+
+    password: {
+      type: String,
+      required: true,
+      minlength: 6
+    },
+
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user"
+    }
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model("User", userSchema);
+
+✅ Why this schema is good (Interview Points)
+
+required ensures data integrity
+
+unique prevents duplicate emails
+
+enum limits role values
+
+timestamps auto adds createdAt & updatedAt
+
+✅ Order Schema
+const mongoose = require("mongoose");
+
+const orderSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // Reference User model
+      required: true
+    },
+
+    items: [
+      {
+        productName: {
+          type: String,
+          required: true
+        },
+
+        quantity: {
+          type: Number,
+          required: true,
+          min: 1
+        },
+
+        price: {
+          type: Number,
+          required: true
+        }
+      }
+    ],
+
+    totalAmount: {
+      type: Number,
+      required: true
+    },
+
+    status: {
+      type: String,
+      enum: ["pending", "paid", "shipped", "delivered"],
+      default: "pending"
+    }
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model("Order", orderSchema);
+
+✅ Why Reference Instead of Embedding?
+
+Because user may have thousands of orders → embedding would exceed size limits.
+
+So we reference:
+
+userId: ObjectId → User
+
+✅ 2. Using populate() (Join in MongoDB)
+
+MongoDB does not have joins like SQL.
+
+Mongoose provides populate() to fetch referenced documents.
+
+Example: Fetch Orders with User Details
+const orders = await Order.find().populate("userId");
+
+Output:
+[
+  {
+    _id: "order123",
+    totalAmount: 5000,
+    userId: {
+      _id: "user789",
+      name: "Niroj",
+      email: "niroj@gmail.com"
+    }
+  }
+]
+
+
+So populate replaces userId with full user object.
+
+Populate Only Specific Fields
+const orders = await Order.find().populate("userId", "name email");
+
+
+Only returns:
+
+name
+
+email
+
+Populate with Conditions
+const orders = await Order.find({ status: "paid" })
+  .populate("userId");
+
+✅ 3. Indexing in MongoDB (Pros & Cons)
+
+Indexing is one of the most asked interview topics.
+
+✅ What is an Index?
+
+An index is a data structure that improves query speed.
+
+Without index:
+
+MongoDB scans every document (collection scan)
+
+With index:
+
+MongoDB uses a shortcut (fast lookup)
+
+Example
+Query:
+db.users.find({ email: "niroj@gmail.com" })
+
+
+If email is indexed → fast search
+
+Creating Index
+db.users.createIndex({ email: 1 })
+
+
+Or in schema:
+
+email: {
+  type: String,
+  unique: true
+}
+
+
+(unique automatically creates index)
+
+✅ Indexing Pros
+1. Faster Reads (Search Queries)
+User.findOne({ email })
+
+
+Becomes extremely fast.
+
+2. Faster Sorting
+Order.find().sort({ createdAt: -1 })
+
+
+If createdAt is indexed → fast sorting.
+
+3. Faster Filtering
+Order.find({ status: "pending" })
+
+❌ Indexing Cons
+1. Slower Writes
+
+Every insert/update must also update index.
+
+So:
+
+Inserts slower
+
+Updates slower
+
+2. Extra Storage
+
+Indexes take memory/disk space.
+
+3. Too Many Indexes Reduce Performance
+
+Bad example:
+
+Indexing every field → wasteful
+
+✅ Best Practice (Interview Answer)
+
+👉 Index fields that are frequently used in:
+
+Search (find)
+
+Filtering (where)
+
+Sorting (sort)
+
+Joining (foreign keys)
+
+Example:
+
+email
+
+userId
+
+createdAt
+
+✅ Interview-Level Summary
+User & Order Relationship
+
+User → many orders
+
+Order → belongs to user
+
+Use ObjectId ref
+
+populate()
+
+Used to fetch referenced documents
+
+Works like SQL JOIN
+
+Indexing
+
+Improves read speed
+
+Slows down write operations
+
+Use indexes wisely
