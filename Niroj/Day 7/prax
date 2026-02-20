@@ -1,0 +1,51 @@
+db.users.aggregate([
+    {
+        $match: {
+            city:"Bangalore"
+        }
+    }
+])
+
+db.orders.aggregate([
+    {
+        $match:{
+            status:"Delivered"
+        }
+    }
+])
+
+db.products.aggregate([
+    {
+        $match:{
+            category:"Electronics"
+        }
+    }
+])
+
+db.orderItems.aggregate([
+    {
+        $match:{
+            quantity:{
+                $gte: 1
+            }
+        }
+    }
+])
+
+
+db.orders.aggregate([
+    {
+        $group:{
+            _id:"$status",
+            count: {
+                $sum:1
+            }
+        }
+    }
+])
+
+db.orders.aggregate([
+    {
+        $sum:"$totalAmount"
+    }
+])
