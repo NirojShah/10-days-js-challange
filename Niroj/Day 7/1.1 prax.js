@@ -101,3 +101,28 @@ db.employees.aggregate([
 // 4. Sort employees by salary descending.
 
 // 5. Show top 2 highest paid employees.
+
+
+// 🔵 ADVANCED LEVEL
+
+// Count employees per skill.
+
+// Join employees with projects using department.
+
+// Find department with highest total salary.
+
+// Find employees whose performanceScore > 8.
+
+// Add bonus field (10% salary) and show it.
+
+// 🔴 PROFESSIONAL LEVEL
+
+// Pagination query (page 1, 2 records per page)
+
+// Salary range bucket (0-50k, 50k-75k, 75k-100k)
+
+// Top performing employee in each department.
+
+// Departments having more than 1 employee.
+
+// Total project budget per department using $lookup.
