@@ -100,6 +100,20 @@ db.employees.aggregate([
 
 // 4. Sort employees by salary descending.
 
+db.employees.aggregate([
+ { $sort:{
+    salary: -1
+  }},
+  {
+    $project:{
+      name: 1,
+      age:1,
+      salary:1,
+      _id:0
+    }
+  }
+])
+
 // 5. Show top 2 highest paid employees.
 
 
