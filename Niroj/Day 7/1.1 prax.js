@@ -190,6 +190,23 @@ db.employees.aggregate([
 
 // Find employees whose performanceScore > 8.
 
+db.employees.aggregate([
+  {
+    $match:{
+      performanceScore:{
+        $gt: 8
+      }
+    }
+  },
+  {
+    $project:{
+      name: 1,
+      salary:1,
+      performanceScore: 1
+    }
+  }
+])
+
 // Add bonus field (10% salary) and show it.
 
 // 🔴 PROFESSIONAL LEVEL
