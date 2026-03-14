@@ -169,6 +169,25 @@ db.employees.aggregate([
 
 // Find department with highest total salary.
 
+db.employees.aggregate([
+  {
+    $group:{
+      _id: "$department",
+      salary: {
+        $sum:"$salary"
+      }
+    }
+  },
+  {
+    $sort:{
+      salary:-1
+    }
+  },
+  {
+    $limit:1
+  }
+])
+
 // Find employees whose performanceScore > 8.
 
 // Add bonus field (10% salary) and show it.
