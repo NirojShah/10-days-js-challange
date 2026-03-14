@@ -116,10 +116,43 @@ db.employees.aggregate([
 
 // 5. Show top 2 highest paid employees.
 
+db.employees.aggregate([
+  {
+    $sort:{
+      salary: -1
+    },
+  },
+    {
+      $limit:2
+    },
+    {
+      $project:{
+        name: 1,
+        salary:1,
+        skills:1,
+        _id:0
+      }
+    }
+])
+
 
 // 🔵 ADVANCED LEVEL
 
 // Count employees per skill.
+
+db.employees.aggregate([
+  {
+    $unwind:"$skills"
+  },
+  {
+    $group:{
+      _id: "$skills",
+      count:{
+        $sum: 1
+      }
+    }
+  }
+])
 
 // Join employees with projects using department.
 
