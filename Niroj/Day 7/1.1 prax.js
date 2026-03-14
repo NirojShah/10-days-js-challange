@@ -112,16 +112,96 @@ db.employees.aggregate([
 
 // 5. Show top 2 highest paid employees.
 
+db.employees.aggregate([
+  {
+    $sort:{
+      salary: -1
+    },
+  },
+    {
+      $limit:2
+    },
+    {
+      $project:{
+        name: 1,
+        salary:1,
+        skills:1,
+        _id:0
+      }
+    }
+])
+
 
 // 🔵 ADVANCED LEVEL
 
 // Count employees per skill.
 
+db.employees.aggregate([
+  {
+    $unwind:"$skills"
+  },
+  {
+    $group:{
+      _id: "$skills",
+      count:{
+        $sum: 1
+      }
+    }
+  }
+])
+
 // Join employees with projects using department.
+
+db.employees.aggregate([
+  {
+    $lookup:{
+      from: "projects",
+      localField:"department",
+      foreignField: "department",
+      as: "project"
+    },
+  }
+])
 
 // Find department with highest total salary.
 
+db.employees.aggregate([
+  {
+    $group:{
+      _id: "$department",
+      salary: {
+        $sum:"$salary"
+      }
+    }
+  },
+  {
+    $sort:{
+      salary:-1
+    }
+  },
+  {
+    $limit:1
+  }
+])
+
 // Find employees whose performanceScore > 8.
+
+db.employees.aggregate([
+  {
+    $match:{
+      performanceScore:{
+        $gt: 8
+      }
+    }
+  },
+  {
+    $project:{
+      name: 1,
+      salary:1,
+      performanceScore: 1
+    }
+  }
+])
 
 // Add bonus field (10% salary) and show it.
 
