@@ -156,6 +156,17 @@ db.employees.aggregate([
 
 // Join employees with projects using department.
 
+db.employees.aggregate([
+  {
+    $lookup:{
+      from: "projects",
+      localField:"department",
+      foreignField: "department",
+      as: "project"
+    },
+  }
+])
+
 // Find department with highest total salary.
 
 // Find employees whose performanceScore > 8.
